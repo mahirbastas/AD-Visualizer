@@ -3,9 +3,13 @@
 ## 📁 Project Structure
 
 ADVisualizer/
+
 ├── scanner/      → C# module (collects mock data and writes to Neo4j)
+
 ├── backend/      → Django REST API (reads data from Neo4j)
+
 ├── frontend/     → React.js UI (visualizes the data)
+
 └── README.md     → Setup and usage documentation
 
 ---
