@@ -1,70 +1,69 @@
-# AD Visualizer (Active Directory Görselleştirici)
+# AD Visualizer (Active Directory Visualizer)
 
-## 📁 Proje Yapısı
+## 📁 Project Structure
 
 ADVisualizer/
-├── scanner/		       → C# modülü (mock verilerle veri toplar ve Neo4j'e yazar)
-├── backend/	 	       → Django REST API (Neo4j'den veriyi alır)
-├── frontend/ 	       → React.js arayüz (verileri görselleştirir)
-└── README.md 	       → Kurulum ve kullanım dökümanı
+├── scanner/      → C# module (collects mock data and writes to Neo4j)
+├── backend/      → Django REST API (reads data from Neo4j)
+├── frontend/     → React.js UI (visualizes the data)
+└── README.md     → Setup and usage documentation
 
 ---
 
-## ⚙️ Geliştirilen Modüller
+## ⚙️ Developed Modules
 
-### 1️⃣ **Scanner (C#)**
+### 1️⃣ Scanner (C#)
 
-* DirectoryEntry yerine mock verilerle çalışır.
-* User, Computer ve Group nesneleri oluşturur.
-* ACL ilişkilerini (`GenericAll`, `WriteDacl`, `ForceChangePassword`) Neo4j’e yazar.
-* `Neo4jClient` ile veritabanına bağlanır.
+- Works with mock data instead of DirectoryEntry.
+- Creates User, Computer, and Group objects.
+- Writes ACL relationships (`GenericAll`, `WriteDacl`, `ForceChangePassword`) to Neo4j.
+- Connects to the database using `Neo4jClient`.
 
-### 2️⃣ **Backend API (Python + Django + Neomodel)**
+### 2️⃣ Backend API (Python + Django + Neomodel)
 
-* Neo4j veritabanındaki verileri alır.
-* REST API üzerinden listeleme ve detay endpoint'leri sunar.
-* ACL ilişkilerini detay endpoint'inde gösterir.
+- Fetches data from the Neo4j database.
+- Provides list and detail endpoints via REST API.
+- Displays ACL relationships in the user detail endpoints.
 
+### 3️⃣ Frontend (React + Axios + React Query)
 
-### 3️⃣ **Frontend (React + Axios + React Query)**
-
-* API'den verileri çekerek kullanıcıya sunar.
-* Dashboard, liste ve detay sayfalarına sahiptir.
-* ACL yetkileri detay sayfalarında gösterilir.
+- Fetches data from the API and displays it to users.
+- Includes dashboard, list, and detail pages.
+- ACL permissions are shown on detail pages.
 
 ---
 
-## 🧩 Gereksinimler
+## 🧩 Requirements
 
-* .NET SDK (7.0+)
-* Python 3.10+
-* Node.js 18+
-* Neo4j Desktop
+- .NET SDK (7.0+)
+- Python 3.10+
+- Node.js 18+
+- Neo4j Desktop
+
+---
+
+## 🔧 Installation Steps
+
+### 🛢️ 1. Neo4j Database Setup
+
+1. Download and install [Neo4j Desktop](https://neo4j.com/download/).
+2. Create a new local database:
+   - **Database Name**: `adgraph`
+   - **Username**: `neo4j`
+   - **Password**: `test1234`
+3. Start the database.
+4. Connection URI: `bolt://localhost:7687`
 
 
-## Kurulum Adımları
+### ⚙️ 2. Scanner (C#) Module Setup
 
-### 🛢️ **1. Neo4j Veritabanı Kurulumu**
-
-1. [Neo4j Desktop]() indir ve yükle.
-2. Yeni bir Local DB oluştur:
-   * **Database Name** : `adgraph`
-   * **Username** : `neo4j`
-   * **Password** : `test1234`
-3. Veritabanını başlat.
-4. Bağlantı URI: `bolt://localhost:7687`
-
-
-### ⚙️ **2. Scanner (C#) Modülü Kurulumu**
-
-```cd
+```bash
 cd scanner
 dotnet restore
 dotnet run
 ```
 
-➡ Mock User, Computer ve Group nesnelerini ve ACL ilişkilerini Neo4j veritabanına yazar.
-
+➡ Mock User, Computer, Group objects and ACL relationships into the Neo4j database.
 
 ### 🐍 **3. Backend API (Django + Neomodel)**
 
@@ -76,19 +75,18 @@ pip install -r requirements.txt
 python manage.py runserver
 ```
 
-➡ API şu portta çalışır: `http://127.0.0.1:8000`
+➡ The API runs at: `http://127.0.0.1:8000`
 
-#### ✅ API Endpoint'leri
+#### ✅ API Endpoints
 
-| Endpoint                    | Açıklama             |
+| Endpoint                    | Description             |
 | --------------------------- | ---------------------- |
-| `/api/v1/users`           | User listesi           |
-| `/api/v1/computers`       | Computer listesi       |
-| `/api/v1/groups`          | Group listesi          |
-| `/api/v1/users/{sid}`     | User detay (ACL dahil) |
-| `/api/v1/computers/{sid}` | Computer detay         |
-| `/api/v1/groups/{sid}`    | Group detay            |
-
+| `/api/v1/users`           | List of users           |
+| `/api/v1/computers`       | List of computers       |
+| `/api/v1/groups`          | List of groups          |
+| `/api/v1/users/{sid}`     | User details (includes ACL) |
+| `/api/v1/computers/{sid}` | Computer details         |
+| `/api/v1/groups/{sid}`    | Group details            |
 
 ### 🌐 **4. Frontend (React.js)**
 
@@ -98,34 +96,33 @@ npm install
 npm start
 ```
 
-#### 🔁 Proxy Ayarı (`package.json` içine):
+#### 🔁 Proxy Setting (in package.json):
 
 ```
 "proxy": "http://localhost:8000"
 ```
 
-#### 📺 Sayfalar
+#### 📺 Pages
 
-| Sayfa                | Açıklama                 |
+| Page                | Description                 |
 | -------------------- | -------------------------- |
-| `/`                | Dashboard: obje sayıları |
-| `/users`           | User listesi               |
-| `/users/{sid}`     | User detay (ACL dahil)     |
-| `/computers`       | Computer listesi           |
-| `/computers/{sid}` | Computer detay             |
-| `/groups`          | Group listesi              |
-| `/groups/{sid}`    | Group detay                |
+| `/`                | Dashboard: object counts |
+| `/users`           | List of users               |
+| `/users/{sid}`     | User details (includes ACL) |
+| `/computers`       | List of computers           |
+| `/computers/{sid}` | Computer details            |
+| `/groups`          | List of groups              |
+| `/groups/{sid}`    | Group details               |
 
+### 🧪 Sample Test Data
 
-### 🧪 Test Verileri
-
-> Scanner modülü içinde şu örnek veriler bulunmaktadır:
+> The Scanner module includes the following mock objects:
 
 * **User** : `CN=Alice,...` – SID: `S-1-5-21-1001`
 * **Computer** : `CN=PC1,...` – SID: `S-1-5-21-2001`
 * **Group** : `CN=Admins,...` – SID: `S-1-5-21-3001`
 
-> ACL:
+> ACL Relationships:
 
 * Alice → PC1: `GenericAll`
 * Admins → Alice: `WriteDacl`
